@@ -25,7 +25,7 @@ const coreLogos = [
 
       <div class="grid gap-4 lg:grid-cols-12 lg:gap-5">
         <!-- core stack: the one dark feature card -->
-        <article v-if="core" v-reveal class="relative flex flex-col overflow-hidden rounded-[1.75rem] bg-strong p-6 text-on-strong ring-1 ring-white/5 sm:p-8 lg:col-span-7 lg:p-10">
+        <article v-if="core" v-reveal class="relative flex flex-col overflow-hidden rounded-[1.25rem] bg-strong p-6 text-on-strong ring-1 ring-white/5 sm:p-8 lg:col-span-7 lg:p-10">
           <div aria-hidden="true" class="blob -right-20 -bottom-24 size-72 bg-brand/25" />
           <div class="relative flex items-center gap-3">
             <span class="grid size-11 place-items-center rounded-2xl bg-brand text-on-brand">

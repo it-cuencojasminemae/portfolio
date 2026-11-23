@@ -12,7 +12,7 @@ withDefaults(defineProps<{ shot: ProjectScreenshot, framed?: boolean }>(), { fra
     class="relative isolate h-full min-h-80 overflow-hidden"
     :class="framed && 'grid place-items-center bg-gradient-to-br from-brand/15 via-muted to-brand/25 p-6 sm:p-10'"
   >
-    <figure class="panel w-full overflow-hidden rounded-xl">
+    <figure class="panel w-full overflow-hidden rounded-[0.75rem]">
       <!-- browser bar -->
       <div class="flex items-center gap-3 border-b border-default bg-muted px-3.5 py-2.5" aria-hidden="true">
         <span class="flex gap-1.5">

@@ -49,7 +49,9 @@
 }
 
 :root {
-  --ui-radius: 0.75rem;
+  /* Nuxt UI multiplies every rounded-* class by this. 0.25rem keeps Tailwind's normal
+     scale (xl = 12px, 2xl = 16px, 3xl = 24px); 0.75rem tripled all corners. */
+  --ui-radius: 0.25rem;
   --ui-bg: var(--color-basalt-50);
   --ui-bg-muted: var(--color-basalt-100);
 
@@ -154,7 +156,7 @@ section[id] {
 
 /* Bento card surface */
 .tile {
-  border-radius: 1.75rem;
+  border-radius: 1.25rem;
   background: white;
   border: 1px solid var(--ui-border);
   box-shadow: 0 1px 2px rgb(11 16 19 / 0.04);

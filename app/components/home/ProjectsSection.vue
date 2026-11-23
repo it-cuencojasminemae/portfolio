@@ -82,21 +82,21 @@ const open = computed({
       v-model:open="open"
       :title="selected?.name"
       :description="selected?.tagline"
-      :ui="{ content: 'sm:max-w-2xl rounded-3xl', title: 'text-2xl font-extrabold tracking-tight' }"
+      :ui="{ content: 'sm:max-w-2xl rounded-[1.25rem]', title: 'text-2xl font-extrabold tracking-tight' }"
     >
       <template #body>
         <div v-if="selected" class="space-y-8">
-          <div class="overflow-hidden rounded-2xl">
+          <div class="overflow-hidden rounded-[0.75rem]">
             <ProjectShot v-if="selected.screenshot" :shot="selected.screenshot" class="min-h-0" />
             <ProjectVisual v-else :variant="selected.visual" class="min-h-64" />
           </div>
 
           <dl class="grid gap-4 sm:grid-cols-2">
-            <div class="rounded-2xl bg-elevated p-4">
+            <div class="rounded-[0.75rem] bg-elevated p-4">
               <dt class="eyebrow text-muted">Role</dt>
               <dd class="mt-1 font-semibold text-highlighted">{{ selected.role }}</dd>
             </div>
-            <div class="rounded-2xl bg-elevated p-4">
+            <div class="rounded-[0.75rem] bg-elevated p-4">
               <dt class="eyebrow text-muted">Context</dt>
               <dd class="mt-1 font-semibold text-highlighted">{{ selected.context }}</dd>
             </div>

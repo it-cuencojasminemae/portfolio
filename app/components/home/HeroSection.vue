@@ -118,8 +118,8 @@ const tailStart = lead.length + 1
             :animate="{ opacity: 1, scale: 1, y: 0 }"
             :transition="{ duration: 1, delay: 0.35, ease }"
           >
-            <div class="glass rounded-[2.5rem] p-3">
-              <div class="relative overflow-hidden rounded-[2rem] bg-muted">
+            <div class="glass rounded-[1.5rem] p-2.5">
+              <div class="relative overflow-hidden rounded-[1rem] bg-muted">
                 <NuxtImg
                   :src="profile.photo"
                   :alt="`Portrait of ${profile.name}`"
@@ -132,7 +132,7 @@ const tailStart = lead.length + 1
                   fetchpriority="high"
                   class="aspect-[4/5] w-full object-cover object-top"
                 />
-                <div class="panel absolute inset-x-3 bottom-3 flex items-center justify-between gap-3 rounded-2xl px-4 py-3">
+                <div class="panel absolute inset-x-3 bottom-3 flex items-center justify-between gap-3 rounded-xl px-4 py-3">
                   <div class="min-w-0">
                     <p class="truncate text-sm font-bold text-highlighted">{{ profile.name }}</p>
                     <p class="truncate text-xs text-muted">{{ profile.location }}</p>

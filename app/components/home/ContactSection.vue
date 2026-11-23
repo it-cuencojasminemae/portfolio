@@ -23,7 +23,7 @@ const linkClass = 'rounded font-medium underline-offset-4 hover:text-strong-acce
 <template>
   <section id="contact" class="py-16 sm:py-24 lg:py-28">
     <UContainer>
-      <div v-reveal class="@container relative isolate overflow-hidden rounded-[2rem] bg-strong px-5 pt-10 pb-4 text-on-strong ring-1 ring-white/5 sm:rounded-[2.5rem] sm:px-10 sm:pt-16 sm:pb-6 lg:px-14 lg:pt-20">
+      <div v-reveal class="@container relative isolate overflow-hidden rounded-[1.25rem] bg-strong px-5 pt-10 pb-4 text-on-strong ring-1 ring-white/5 sm:rounded-[1.5rem] sm:px-10 sm:pt-16 sm:pb-6 lg:px-14 lg:pt-20">
         <!-- still glow, no animation -->
         <div aria-hidden="true" class="blob -top-32 right-0 -z-10 size-[28rem] bg-brand/30" />
 

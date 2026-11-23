@@ -15,7 +15,7 @@ import { languages, profile, softSkills, stats, techLogos } from '~/data/portfol
       <!-- bento grid -->
       <div class="grid gap-4 md:grid-cols-6 lg:grid-cols-12 lg:gap-5">
         <!-- profile -->
-        <article v-reveal class="relative overflow-hidden rounded-[1.75rem] bg-strong p-6 text-on-strong ring-1 ring-white/5 sm:p-8 md:col-span-6 lg:col-span-7 lg:row-span-2 lg:p-10">
+        <article v-reveal class="relative overflow-hidden rounded-[1.25rem] bg-strong p-6 text-on-strong ring-1 ring-white/5 sm:p-8 md:col-span-6 lg:col-span-7 lg:row-span-2 lg:p-10">
           <div aria-hidden="true" class="blob -top-24 -right-24 size-72 bg-brand/30" />
           <div class="relative flex h-full flex-col">
             <UIcon name="i-lucide-quote" class="size-8 text-strong-accent" />
@@ -38,7 +38,7 @@ import { languages, profile, softSkills, stats, techLogos } from '~/data/portfol
         </article>
 
         <!-- stats -->
-        <article v-reveal="0.08" class="rounded-[1.75rem] bg-brand p-6 text-on-brand sm:p-8 md:col-span-6 lg:col-span-5">
+        <article v-reveal="0.08" class="rounded-[1.25rem] bg-brand p-6 text-on-brand sm:p-8 md:col-span-6 lg:col-span-5">
           <dl class="grid grid-cols-2 gap-x-5 gap-y-7 sm:gap-x-6 sm:gap-y-8">
             <div v-for="stat in stats" :key="stat.label" class="flex flex-col-reverse">
               <dt class="mt-1 text-sm font-semibold">{{ stat.label }}</dt>

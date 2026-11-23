@@ -114,7 +114,7 @@ function step(dir: 1 | -1) {
                   <!-- the ::after stretches this button over the whole card, so the card is one big click target -->
                   <button
                     type="button"
-                    class="inline-flex items-center gap-1 rounded-full text-sm font-semibold text-primary after:absolute after:inset-0 after:rounded-[1.75rem] after:content-['']"
+                    class="inline-flex items-center gap-1 rounded-full text-sm font-semibold text-primary after:absolute after:inset-0 after:rounded-[1.25rem] after:content-['']"
                     :aria-label="`View certificate: ${cert.title}`"
                     @click="viewing = i"
                   >
@@ -134,11 +134,11 @@ function step(dir: 1 | -1) {
       v-model:open="viewerOpen"
       :title="current?.title"
       :description="current ? `${current.issuer} · ${current.date}` : undefined"
-      :ui="{ content: 'sm:max-w-4xl rounded-3xl', title: 'text-xl font-extrabold tracking-tight text-pretty' }"
+      :ui="{ content: 'sm:max-w-4xl rounded-[1.25rem]', title: 'text-xl font-extrabold tracking-tight text-pretty' }"
     >
       <template #body>
         <div v-if="current" class="space-y-5">
-          <div class="overflow-hidden rounded-2xl bg-muted ring-1 ring-default">
+          <div class="overflow-hidden rounded-[0.75rem] bg-muted ring-1 ring-default">
             <NuxtImg
               :key="current.image"
               :src="current.image"
