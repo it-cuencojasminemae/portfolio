@@ -1,0 +1,255 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+/* ------------------------------------------------------------------
+   Design tokens
+   Palette: Black Basalt #0B1013 · Bone #E8F3F6 · Glacier Blue #1BA6CD
+------------------------------------------------------------------- */
+@theme static {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Glacier Blue (500 is the brand color) */
+  --color-glacier-50: #ecfaff;
+  --color-glacier-100: #d4f2fb;
+  --color-glacier-200: #aee6f6;
+  --color-glacier-300: #74d4ee;
+  --color-glacier-400: #3bbde0;
+  --color-glacier-500: #1ba6cd;
+  --color-glacier-600: #1585ac;
+  --color-glacier-700: #156b8b;
+  --color-glacier-800: #185872;
+  --color-glacier-900: #194a60;
+  --color-glacier-950: #0b2f40;
+
+  /* Basalt neutrals: 100 is Bone, 950 is Black Basalt */
+  --color-basalt-50: #f4f9fa;
+  --color-basalt-100: #e8f3f6;
+  --color-basalt-200: #d3e2e7;
+  --color-basalt-300: #b2c7cf;
+  --color-basalt-400: #8aa3ad;
+  --color-basalt-500: #6b8590;
+  --color-basalt-600: #546b75;
+  --color-basalt-700: #44575f;
+  --color-basalt-800: #2c3a40;
+  --color-basalt-900: #172024;
+  --color-basalt-950: #0b1013;
+}
+
+/* Semantic tokens of our own, on top of Nuxt UI's.
+   Components use these names (bg-brand, text-on-strong ...), never raw palette shades,
+   so light and dark mode stay in sync from this one file. */
+@theme inline {
+  --color-brand: var(--brand);
+  --color-on-brand: var(--on-brand);
+  --color-strong: var(--strong);
+  --color-on-strong: var(--on-strong);
+  --color-on-strong-muted: var(--on-strong-muted);
+  --color-strong-accent: var(--strong-accent);
+}
+
+:root {
+  --ui-radius: 0.75rem;
+  --ui-bg: var(--color-basalt-50);
+  --ui-bg-muted: var(--color-basalt-100);
+
+  /* The true Glacier Blue (#1BA6CD) everywhere: text, icons, rings, badges and fills */
+  --ui-primary: var(--color-glacier-500);
+  --ui-text-muted: var(--ui-color-neutral-600);
+  --ui-text-toned: var(--ui-color-neutral-700);
+
+  /* Glacier Blue surfaces carry Black Basalt text (6.7:1) */
+  --brand: var(--color-glacier-500);
+  --on-brand: var(--color-basalt-950);
+
+  /* Dark feature cards (profile, featured skills, contact) */
+  --strong: var(--color-basalt-950);
+  --on-strong: var(--color-basalt-100);
+  --on-strong-muted: var(--color-basalt-300);
+  --strong-accent: var(--color-glacier-500);
+}
+
+.dark {
+  --ui-bg: var(--color-basalt-950);
+  --ui-bg-muted: var(--color-basalt-900);
+  --ui-bg-elevated: var(--color-basalt-800);
+  --ui-bg-accented: var(--color-basalt-700);
+  --ui-primary: var(--color-glacier-500);
+  --ui-text-muted: var(--ui-color-neutral-400);
+  --ui-text-toned: var(--ui-color-neutral-300);
+
+  /* lighter than the page so dark cards don't disappear into it */
+  --strong: var(--color-basalt-900);
+}
+
+html {
+  scroll-padding-top: 6rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+
+section[id] {
+  scroll-margin-top: 6rem;
+}
+
+/* Soft tint instead of a solid brand block, so selected text stays readable and calm */
+::selection {
+  background: color-mix(in oklab, var(--color-glacier-500) 20%, transparent);
+  color: inherit;
+}
+
+/* Brand-colored keyboard focus everywhere (Nuxt UI components already do this) */
+@layer base {
+  :where(a, button, [tabindex]):focus-visible {
+    outline: 2px solid var(--ui-primary);
+    outline-offset: 3px;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Liquid glass: only for navigation and controls (nav bar, photo frame)
+------------------------------------------------------------------- */
+.glass {
+  background: color-mix(in oklab, white 68%, transparent);
+  backdrop-filter: blur(20px) saturate(170%);
+  -webkit-backdrop-filter: blur(20px) saturate(170%);
+  border: 1px solid rgb(255 255 255 / 0.7);
+  box-shadow:
+    inset 0 1px 0 0 rgb(255 255 255 / 0.8),
+    0 16px 40px -20px rgb(11 16 19 / 0.35);
+}
+
+.dark .glass {
+  background: color-mix(in oklab, var(--color-basalt-900) 60%, transparent);
+  border-color: rgb(255 255 255 / 0.1);
+  box-shadow:
+    inset 0 1px 0 0 rgb(255 255 255 / 0.08),
+    0 16px 40px -20px rgb(0 0 0 / 0.7);
+}
+
+/* People who turn on "Reduce transparency" get solid surfaces */
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    background: var(--ui-bg);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* Solid floating label: for content that sits on top of visuals */
+.panel {
+  background: var(--ui-bg);
+  border: 1px solid var(--ui-border);
+  box-shadow: 0 12px 30px -14px rgb(11 16 19 / 0.3);
+}
+
+/* Bento card surface */
+.tile {
+  border-radius: 1.75rem;
+  background: white;
+  border: 1px solid var(--ui-border);
+  box-shadow: 0 1px 2px rgb(11 16 19 / 0.04);
+}
+
+.dark .tile {
+  background: var(--color-basalt-900);
+}
+
+/* Lift on hover for cards you can act on */
+.tile-hover {
+  transition: transform 250ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 250ms ease;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .tile-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 48px -24px rgb(11 16 19 / 0.3);
+  }
+}
+
+/* Soft blurry color blobs. Only .blob-float moves (hero only). */
+.blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(70px);
+  opacity: 0.9;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .blob-float {
+    animation: float 18s ease-in-out infinite;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(4%, -6%, 0) scale(1.08); }
+  66% { transform: translate3d(-5%, 4%, 0) scale(0.95); }
+}
+
+/* Giant type
+   line-height stays near 1 and each letter gets bottom padding: background-clip:text only
+   paints inside the box, so a tighter box chops the bottom of letters like J and S. */
+.giant {
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+.giant-letter {
+  --giant-ink: var(--ui-text-highlighted);
+  display: inline-block;
+  padding-block: 0.02em 0.08em;
+  background-image: linear-gradient(
+    to bottom,
+    var(--giant-ink) 10%,
+    color-mix(in oklab, var(--giant-ink) 14%, transparent) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.giant-letter.on-strong {
+  --giant-ink: var(--on-strong);
+}
+
+/* Hand-drawn underline: strokes itself in once (needs pathLength="1" on the path) */
+@media (prefers-reduced-motion: no-preference) {
+  .draw-in {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw-in 0.9s ease-in-out forwards;
+  }
+}
+
+@keyframes draw-in {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Small mono labels */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@media (min-width: 40rem) {
+  .eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+  }
+}
+
+/* Scroll reveals are handled by the v-reveal directive (plugins/reveal.ts, Motion). */
