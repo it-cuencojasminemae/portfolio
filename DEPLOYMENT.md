@@ -1,33 +1,34 @@
-# Deploying to Cloudflare (Workers static assets)
+# Deploying to Cloudflare Pages
 
 This portfolio is a fully static Nuxt site. `npm run generate` prerenders every page and
-optimizes every image at build time, then Cloudflare serves the files from its CDN as
-**static assets on Workers**. No server code runs, there's no database, and it's on the free plan
-(static asset requests are free and unlimited).
+optimizes every image at build time, then Cloudflare Pages serves the files from its CDN.
+No server, no database, free plan (unlimited requests and bandwidth).
+
+**Live at:** https://jasminecuenco.pages.dev
 
 | Setting | Value |
 |---|---|
 | Repository | `it-cuencojasminemae/portfolio` (GitHub) |
-| Project / Worker name | `jasminecuenco` (must match `name` in `wrangler.jsonc`) |
+| Pages project name | `jasminecuenco` |
 | Production branch | `main` |
+| Framework preset | `Nuxt.js` |
 | Build command | `npm run generate` |
-| Deploy command | `npx wrangler deploy` |
-| Static files folder | `.output/public` (set in `wrangler.jsonc`) |
-| Node version | `22` (pinned in `.node-version`) |
+| Build output directory | `.output/public` |
+| Node version | `22` (pinned in `.node-version`, plus the `NODE_VERSION` variable) |
 
 ---
 
-## What is already set up in the repo
+## What is set up in the repo
 
 | File | Why it's there |
 |---|---|
-| `wrangler.jsonc` | Tells `wrangler deploy` to upload `.output/public` as static assets under the name `jasminecuenco`, and to serve `404.html` for unknown URLs. |
-| `nuxt.config.ts` → `nitro.preset: 'static'` | **Important.** Without it, Nuxt detects Cloudflare's build machine and switches to a server build that skips prerendering, which would leave you with no `index.html`. |
+| `nuxt.config.ts` → `nitro.preset: 'static'` | **Important.** Without it, Nuxt detects Cloudflare's build machine and may switch to a server build that skips prerendering, which would leave you with no `index.html`. |
+| `nuxt.config.ts` → `image.provider: 'ipx'` | Makes images get resized and converted to WebP during the build and shipped as plain files, so no paid image service is needed. |
 | `.node-version` | Tells Cloudflare's build machine to use Node 22. Nuxt 4 needs Node 20 or newer. |
 | `public/_headers` | Cloudflare reads this file and adds security headers to every page, plus long-term caching for `/_nuxt/*` (hashed JS/CSS) and `/_ipx/*` (optimized images). |
-| `nuxt.config.ts` → `image.provider: 'ipx'` | Makes images get resized and converted to WebP during the build and shipped as plain files, so no paid image service is needed. |
 | `package.json` → `engines` | States the minimum Node version. |
-| `.gitignore` → `.wrangler` | Keeps Cloudflare CLI cache files out of git, in case you ever use it. |
+
+There is deliberately **no** `wrangler.jsonc`/`wrangler.toml`. Pages is configured in the dashboard.
 
 ---
 
@@ -46,83 +47,72 @@ finished site exactly as Cloudflare will serve it:
 npx serve .output/public
 ```
 
-Open the URL it prints (usually http://localhost:3000), click around, then press `Ctrl+C`.
+Open the URL it prints, click around, then press `Ctrl+C`.
 
-## Step 2: Commit and push the deployment setup
+## Step 2: Remove the old Worker (one-time)
 
-From this folder (`D:\Programming Files\My Portfolio\portfolio`):
+The site was first deployed as a Worker (`jasminecuenco.it-cuencojasminemae.workers.dev`).
+Delete it first. That frees the `jasminecuenco` name for Pages and stops the Worker from
+rebuilding on every push.
+
+1. **Workers & Pages** → click **`jasminecuenco`** (the Worker).
+2. **Settings** → scroll to the bottom → **Delete** → type the name to confirm.
+
+## Step 3: Push the repo changes
 
 ```powershell
 git add -A
 ```
 
 ```powershell
-git commit -m "Set up Cloudflare deployment"
+git commit -m "Switch deployment to Cloudflare Pages"
 ```
 
 ```powershell
-git push origin main
+git push
 ```
 
-If Git asks you to sign in, use the GitHub sign-in window it opens. Afterwards, check
-https://github.com/it-cuencojasminemae/portfolio to confirm `DEPLOYMENT.md` and `.node-version` are there.
+## Step 4: Create the Pages project
 
-## Step 3: Create a Cloudflare account
-
-1. Go to https://dash.cloudflare.com/sign-up and sign up (free, no card needed).
-2. Verify your email.
-
-## Step 4: Create the app and connect GitHub
-
-1. In the Cloudflare dashboard, open **Workers & Pages** from the left sidebar
-   (under **Compute** in newer layouts).
+1. In the Cloudflare dashboard, open **Workers & Pages**.
 2. Click **Create application**.
-3. Under **Select a method**, choose **Import a repository** (Continue with GitHub).
-4. If asked, connect GitHub: choose your account `it-cuencojasminemae` → **Only select
-   repositories** → `portfolio` → **Install & Authorize**.
-5. Under **Select a repository**, pick `it-cuencojasminemae/portfolio` → **Next**.
+3. Cloudflare shows the **Workers** setup first. Look for the **Pages** option instead:
+   - a **Pages** tab at the top of the Create page, **or**
+   - a link near the bottom such as *"Looking to deploy Pages? Get started"*.
+4. Choose **Import an existing Git repository** (or **Connect to Git**).
+5. Select GitHub account `it-cuencojasminemae` → repository **`portfolio`** → **Begin setup**.
+   - If `portfolio` isn't listed, click the link to configure the GitHub app and give it access to that repo.
 
-## Step 5: Set up your application
+## Step 5: Configure the build
 
-On the **Set up your application** page:
+On **Set up builds and deployments**:
 
 | Field | Enter |
 |---|---|
-| **Project name** | `jasminecuenco`. **This must match `"name"` in `wrangler.jsonc`.** If you choose another name, change it in `wrangler.jsonc` too, then commit and push before deploying. |
-| **Build command** | `npm run generate` *(replace the default `npm run build`)* |
-| **Deploy command** | `npx wrangler deploy` *(keep the default)* |
-| **Preview command** | keep the default |
-| **Enable Preview builds** | on (each non-`main` branch gets its own preview URL) |
+| **Project name** | `jasminecuenco`. This becomes `jasminecuenco.pages.dev` and can't be changed later. If it's taken, Cloudflare adds a suffix (e.g. `jasminecuenco-abc.pages.dev`), so pick a different name if you don't like the result. |
+| **Production branch** | `main` |
+| **Framework preset** | `Nuxt.js` |
+| **Build command** | `npm run generate` *(replace whatever the preset fills in)* |
+| **Build output directory** | `.output/public` *(replace whatever the preset fills in)* |
+| **Root directory (advanced)** | leave empty |
 
-If there's an **Advanced settings** section:
-- **Path / Root directory**: leave as `/`.
-- **Build variables**: add `NODE_VERSION` = `22`. This is a backup for `.node-version`.
+Under **Environment variables (advanced)** → **Add variable**:
 
-Click **Deploy**.
+| Variable name | Value | Encrypt? |
+|---|---|---|
+| `NODE_VERSION` | `22` | No, plain text is fine. It isn't a secret. |
 
-## Step 6: Watch the first build
-
-The build log streams on screen and takes about 1–3 minutes. A successful run includes lines like:
+Click **Save and Deploy**. The build takes about 1–3 minutes and should show:
 
 ```
 [nitro] Prerendered 56 routes
 [nitro] Generated public .output/public
-✨ Read ... files from the assets directory .../.output/public
-Uploaded jasminecuenco
-Deployed jasminecuenco triggers
-  https://jasminecuenco.<your-subdomain>.workers.dev
+Success: Your site was deployed!
 ```
 
-Open that `workers.dev` link. Your portfolio is live. 🎉 You can also find it later under
-Workers & Pages → `jasminecuenco` → **Settings → Domains & Routes**.
+Then open **https://jasminecuenco.pages.dev**. 🎉
 
-> **Using Pages instead?** If you go through the Pages flow ("Looking to deploy Pages?"
-> link on the Create page), use build command `npm run generate`, output directory
-> `.output/public`, and `NODE_VERSION=22`, with no deploy command. Your URL would be
-> `<name>.pages.dev`. Both work. This guide follows the Workers flow because it's what
-> Cloudflare shows by default.
-
-## Step 7: Check the live site
+## Step 6: Check the live site
 
 - [ ] Hero photo, project screenshots and certificate images all load
 - [ ] The light/dark toggle works
@@ -131,14 +121,12 @@ Workers & Pages → `jasminecuenco` → **Settings → Domains & Routes**.
 - [ ] `mailto:` buttons open an email app
 - [ ] It looks right on your phone
 - [ ] A made-up URL (e.g. `/does-not-exist`) shows the 404 page
-- [ ] Headers are applied: in Chrome, open DevTools → Network → reload → click the page
-      request → *Response Headers* should include `x-frame-options: DENY`
 
 ---
 
 ## Updating the site later
 
-Every push to `main` deploys automatically:
+Every push to `main` redeploys automatically:
 
 ```powershell
 git add -A
@@ -155,29 +143,23 @@ git push
 The new version is live about 2 minutes later. Most content lives in `app/data/portfolio.ts`.
 
 **Preview before going live:** push to any other branch (e.g. `git push origin redesign`) and
-Cloudflare builds it as a preview version with its own URL (shown in the build log and on
-the GitHub commit), without touching the live site.
+Pages builds it at `redesign.jasminecuenco.pages.dev`, without touching the live site.
 
-**Undo a bad deploy:** Workers & Pages → `jasminecuenco` → **Deployments** → find the last
-good version → **⋯** → **Rollback** / **Deploy this version**.
+**Undo a bad deploy:** Workers & Pages → `jasminecuenco` (Pages) → **Deployments** → find the
+last good deployment → **⋯** → **Rollback to this deployment**.
 
 ---
 
-## Optional extras (all free unless noted)
+## Optional extras
 
 ### Custom domain (~$10–15/year for the domain itself)
-1. Buy a domain, e.g. through Cloudflare (**Domain Registration → Register Domains**), which
-   sells at cost, or from any registrar.
-2. Workers & Pages → `jasminecuenco` → **Settings → Domains & Routes** → **Add → Custom domain**
-   → enter it. The domain has to be added to your Cloudflare account first (free plan). HTTPS is automatic.
+1. Buy a domain, e.g. through Cloudflare (**Domains → Register**), which sells at cost.
+2. Pages project → **Custom domains** → **Set up a custom domain** → enter it → confirm the DNS
+   record. HTTPS is automatic.
 
-### Visitor analytics
-Cloudflare dashboard → **Analytics & Logs → Web Analytics** → **Add a site** → enter your
-URL. It's privacy-friendly and cookie-free, so no consent banner is needed.
-
-### Social link previews
-When you have your final URL, you can add an `ogImage` (an absolute URL to a preview image)
-to `useSeoMeta` in `app/pages/index.vue`, so links shared on LinkedIn or Messenger show a picture.
+### Visitor analytics (free)
+Pages project → **Metrics** → enable **Web Analytics**. It's privacy-friendly and cookie-free,
+so no consent banner is needed.
 
 ---
 
@@ -185,10 +167,10 @@ to `useSeoMeta` in `app/pages/index.vue`, so links shared on LinkedIn or Messeng
 
 | Problem | Fix |
 |---|---|
-| Build log says the Node version is too old / `Unsupported engine` | Add `NODE_VERSION` = `22` under Settings → Build → **Build variables and secrets**, then retry the build. |
-| Build fails with a Worker **name mismatch** | The dashboard project name and `"name"` in `wrangler.jsonc` differ. Make them the same, then commit and push. |
-| `wrangler deploy` says the assets directory doesn't exist | The build command is still `npm run build`. Change it to `npm run generate` under Settings → Build. |
-| Site shows only the 404 page, or the log mentions `cloudflare-module` | `nitro: { preset: 'static' }` is missing from `nuxt.config.ts`. Put it back and push. |
-| Images missing on the live site | Check that `image.provider` is still `'ipx'` in `nuxt.config.ts`, and that the image files are committed in `public/`. |
+| Build log says the Node version is too old / `Unsupported engine` | Check `NODE_VERSION=22` under Settings → **Variables and Secrets** (Production and Preview), then **Retry deployment**. |
+| Deploy succeeds but the page is blank or 404 | The output directory is wrong. Settings → **Build** → set it to `.output/public` exactly, then redeploy. |
+| Build ran `nuxt build` instead of `nuxt generate` | Change the build command to `npm run generate`. |
+| Site shows only the 404 page, or the log mentions `cloudflare-pages` / `cloudflare-module` presets | `nitro: { preset: 'static' }` is missing from `nuxt.config.ts`. Put it back and push. |
+| Images missing | Check that `image.provider` is still `'ipx'` in `nuxt.config.ts` and that the files are committed in `public/`. |
 | `npm ci` fails with a lockfile error | Run `npm install` locally, commit the updated `package-lock.json`, and push. |
 | Changes don't show up | Hard-refresh (`Ctrl+Shift+R`). Then check Deployments to confirm the latest commit built successfully. |
