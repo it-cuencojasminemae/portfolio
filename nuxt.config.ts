@@ -27,7 +27,10 @@ export default defineNuxtConfig({
     }
   },
 
+  // Images are optimized at build time (nuxt generate) and shipped as static files.
+  // Pinning 'ipx' stops @nuxt/image from switching to a host's paid image CDN.
   image: {
+    provider: 'ipx',
     quality: 85,
     format: ['webp']
   }
