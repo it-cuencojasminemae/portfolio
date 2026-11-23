@@ -143,8 +143,7 @@ function step(dir: 1 | -1) {
               :key="current.image"
               :src="current.image"
               :alt="`Certificate: ${current.title}, awarded to Jasmine Mae Cuenco`"
-              width="1600"
-              sizes="100vw lg:900px"
+              densities="x1"
               format="webp"
               class="mx-auto max-h-[58vh] w-auto object-contain"
             />
