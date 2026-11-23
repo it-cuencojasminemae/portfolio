@@ -29,6 +29,12 @@ export default defineNuxtConfig({
 
   // Images are optimized at build time (nuxt generate) and shipped as static files.
   // Pinning 'ipx' stops @nuxt/image from switching to a host's paid image CDN.
+  // Always output a plain static site. Without this, Nuxt detects Cloudflare's build
+  // environment and switches to a server (Worker) build, which skips prerendering.
+  nitro: {
+    preset: 'static'
+  },
+
   image: {
     provider: 'ipx',
     quality: 85,
